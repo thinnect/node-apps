@@ -115,7 +115,6 @@ INCLUDES += \
     -I$(SILABS_SDKDIR)/platform/halconfig/inc/hal-config \
     -I$(SILABS_SDKDIR)/platform/emlib/inc \
     -I$(ZOO)/thinnect.lll/logging \
-    -I$(ZOO)/thinnect.mist-comm/include -I$(ZOO)/thinnect.mist-comm/include/compat -I$(ZOO)/thinnect.mist-comm/test \
     -I$(ZOO)/lammertb.libcrc/include \
     $(FREERTOS_INC)
 
