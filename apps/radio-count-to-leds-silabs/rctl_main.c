@@ -61,7 +61,7 @@ static void receive_message (comms_layer_t* comms, const comms_msg_t* msg, void*
 	{
 		radio_count_msg_t * packet = (radio_count_msg_t*)comms_get_payload(comms, msg, sizeof(radio_count_msg_t));
 		uint16_t counter = ntoh16(packet->counter);
-		info1("counter:%u", (unsigned int)counter);
+		info1("rcv:%u", (unsigned int)counter);
 		PLATFORM_LedsSet((uint8_t)counter);
 	}
 	else warn1("size %d", (unsigned int)comms_get_payload_length(comms, msg));
@@ -112,7 +112,7 @@ void app_loop ()
 
 	for (;;)
 	{
-		info1("counter %u", (unsigned int)counter);
+		info1("ctr:%u", (unsigned int)counter);
 
 		while(osMutexAcquire(m_mutex, 1000) != osOK);
 		if(false == m_sending)
@@ -140,7 +140,7 @@ void app_loop ()
 		}
 		osMutexRelease(m_mutex);
 
-		osDelay(1000);
+		osDelay(250);
 		counter++;
 	}
 }
