@@ -11,6 +11,9 @@ VERSION_DEVEL           ?= "-dev"
 
 RADIO_CHANNEL           ?= 26
 
+# Set device address at compile time for cases where a signature is not present
+DEFAULT_AM_ADDR         ?= 1
+
 # No bootloader, app starts at 0
 APP_START               = 0
 
@@ -144,6 +147,7 @@ $(call passVarToCpp,CFLAGS,VERSION_MINOR)
 $(call passVarToCpp,CFLAGS,VERSION_PATCH)
 $(call passVarToCpp,CFLAGS,VERSION_STR)
 $(call passVarToCpp,CFLAGS,RADIO_CHANNEL)
+$(call passVarToCpp,CFLAGS,DEFAULT_AM_ADDR)
 
 # _______________________________ Project rules _______________________________
 

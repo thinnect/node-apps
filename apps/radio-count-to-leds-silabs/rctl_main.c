@@ -55,6 +55,7 @@ static comms_msg_t m_msg;
 static bool m_sending = false;
 static osMutexId_t m_mutex;
 
+// Receive a message from the network
 static void receive_message (comms_layer_t* comms, const comms_msg_t* msg, void* user)
 {
 	if (comms_get_payload_length(comms, msg) >= sizeof(radio_count_msg_t))
@@ -67,6 +68,7 @@ static void receive_message (comms_layer_t* comms, const comms_msg_t* msg, void*
 	else warn1("size %d", (unsigned int)comms_get_payload_length(comms, msg));
 }
 
+// Message has been sent
 static void radio_send_done (comms_layer_t * comms, comms_msg_t * msg, comms_error_t result, void * user)
 {
 	logger(result == COMMS_SUCCESS ? LOG_DEBUG1: LOG_WARN1, "snt %u", result);
@@ -75,6 +77,7 @@ static void radio_send_done (comms_layer_t * comms, comms_msg_t * msg, comms_err
 	osMutexRelease(m_mutex);
 }
 
+// Perform basic radio setup, register to receive RadioCountToLeds packets
 static comms_layer_t* radio_setup (am_addr_t node_addr)
 {
 	static comms_receiver_t rcvr;
@@ -91,16 +94,22 @@ static comms_layer_t* radio_setup (am_addr_t node_addr)
 void app_loop ()
 {
 	uint16_t counter = 0;
-	am_addr_t node_addr;
+	am_addr_t node_addr = DEFAULT_AM_ADDR;
 	uint8_t node_eui[8];
 
 	m_mutex = osMutexNew(NULL);
 
 	// Initialize node signature - get address and EUI64
-	sigInit();
-	node_addr = sigGetNodeId();
-	sigGetEui64(node_eui);
-	infob1("ADDR:%"PRIX16" EUI64:", node_eui, sizeof(node_eui), node_addr);
+	if (SIG_GOOD == sigInit())
+	{
+		node_addr = sigGetNodeId();
+		sigGetEui64(node_eui);
+		infob1("ADDR:%"PRIX16" EUI64:", node_eui, sizeof(node_eui), node_addr);
+	}
+	else
+	{
+		warn1("ADDR:%"PRIX16); // Falling back to default addr
+	}
 
 	// initialize radio
 	comms_layer_t* radio = radio_setup(node_addr);
@@ -110,6 +119,7 @@ void app_loop ()
 		for (;;); // panic
 	}
 
+	// Lopp forever, incrementing counter and broadcasting it
 	for (;;)
 	{
 		info1("ctr:%u", (unsigned int)counter);
@@ -126,7 +136,7 @@ void app_loop ()
 	            // Send data packet
 	            comms_set_packet_type(radio, &m_msg, AMID_RADIO_COUNT_TO_LEDS);
 	            comms_am_set_destination(radio, &m_msg, AM_BROADCAST_ADDR);
-	            //comms_am_set_source(radio, &m_msg, radio_address); // No need, it will use default
+	            //comms_am_set_source(radio, &m_msg, radio_address); // No need, it will use the one set with radio_init
 	            comms_set_payload_length(radio, &m_msg, sizeof(radio_count_msg_t));
 
 	            comms_error_t result = comms_send(radio, &m_msg, radio_send_done, NULL);

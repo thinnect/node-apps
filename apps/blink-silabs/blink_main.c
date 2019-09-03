@@ -62,7 +62,6 @@ int logger_fwrite_boot (const char *ptr, int len)
 	return len;
 }
 
-
 int main ()
 {
 	PLATFORM_Init();
