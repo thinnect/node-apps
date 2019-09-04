@@ -12,14 +12,14 @@ obtained from
 The ARM toolchain can be compiled from source, but installing the binary version
 is easy and only requires that the *bin* directory of the toolchain be added
 to the $PATH.
-	* Download `gcc-arm-none-eabi-8-2019-q3-update-linux.tar.bz2`
-	* Unpack to `/opt`:
-		`sudo tar xjvf gcc-arm-none-eabi-8-2019-q3-update-linux.tar.bz2 -C /opt/`
-	* Add to path - edit `~/.profile` and add:
-		`export PATH=$PATH:/opt/gcc-arm-none-eabi-8-2019-q3-update/bin`
-	* Refresh the environment and check version:
-		`source ~/.profile`
-		`arm-none-eabi-gcc -v`
+- Download `gcc-arm-none-eabi-8-2019-q3-update-linux.tar.bz2`
+- Unpack to `/opt`:\
+  `sudo tar xjvf gcc-arm-none-eabi-8-2019-q3-update-linux.tar.bz2 -C /opt/`
+- Add to path - edit `~/.profile` and add:\
+  `export PATH=$PATH:/opt/gcc-arm-none-eabi-8-2019-q3-update/bin`
+- Refresh the environment and check version:\
+  `source ~/.profile`
+  `arm-none-eabi-gcc -v`
 
 Alternatively it is possible to use the compiler from Simplicity Studio or
 the one provided by you Linux distribution, but do note that the compiler in
@@ -33,27 +33,27 @@ SiLabs licensing terms, it is not possible to redistribute the files with the
 project and it is necessary to download and install Simplicity Studio and the
 Gecko SDK. This requires registration with SiLabs.
 
-Essentially:
-	* Register with SiLabs and download `SimplicityStudio-v4.tgz`
-	* Unpack Simplicity Studio
-		`tar xzvf SimplicityStudio-v4.tgz -C ~`
-	* Run Simplicity Studio setup
-		`./setup.sh`
-	* Start Simplicity Studio
-		`./run_studio.sh`
-	* Read and accept License agreements
-	* Log in with your SiLabs account
-	* Click `Help->Update Software`
-		(wait for update process to complete)
-	* Click `Install by Device`
-	* Choose the `SLWSTK6000B` Mighty Gecko Kit and click Next
-	* Click Next
-	* Make sure at least `Flex SDK 2.5.5` is selected and click Next
-		(It should be ok to use newer versions as vell, though the SILABS_SDK
-		path may need adjustment as well)
-	* Accept licenses, click Finish, wait for completion and exit
-	* Add the path to commander to path - edit `~/.profile` and add:
-		`export PATH=$PATH:~/SimplicityStudio_v4/developer/adapter_packs/commander`
+https://www.silabs.com/products/development-tools/software/simplicity-studio
+
+Installing Simplicity Studio:
+- Register with SiLabs and download `SimplicityStudio-v4.tgz`
+- Unpack Simplicity Studio\
+  `tar xzvf SimplicityStudio-v4.tgz -C ~`
+- Run Simplicity Studio setup\
+  `./setup.sh`
+- Start Simplicity Studio\
+  `./run_studio.sh`
+- Read and accept License agreements
+- Log in with your SiLabs account
+- Click `Help->Update Software`\
+  (wait for update process to complete)
+- Click `Install by Device`
+- Choose the `SLWSTK6000B` Mighty Gecko Kit and click Next **twice**
+- Make sure at least `Flex SDK 2.5.5` is selected and click Next\
+  (It should be ok to use newer versions as well, though the SILABS_SDK path may need adjustment)
+- Accept licenses, click Finish, wait for completion and exit
+- Add the path to commander to path - edit `~/.profile` and add:\
+  `export PATH=$PATH:~/SimplicityStudio_v4/developer/adapter_packs/commander`
 
 Makefiles require that the SILABS_SDK variable point to the
 SimplicityStudio_v4/developer/sdks/gecko_sdk_suite/v2.5 directory, so take
