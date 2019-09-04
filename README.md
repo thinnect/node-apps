@@ -6,7 +6,7 @@ The embedded node platform consists of a relatively generic embedded real-time
 operating system, microcontroller/platform APIs and libraries and a simple
 buildsystem. The platform is mostly focused for devices that use an 802.15.4
 compatible wireless radio for communications. The specific 802.15.4 messaging
-schema is based on and compatible with the TinyOS[¹] ActiveMessage principles.
+schema is based on and compatible with the [TinyOS](#tinyos) ActiveMessage principles.
 
 # Platforms
 Currently the examples only cover SiLabs Wireless Gecko based devices.
@@ -52,7 +52,7 @@ and modifying the individual levels in each examples respective `loglevels.h` fi
 # Embbedded operating system
 The node platform is built around the ARM CMSIS RTOS abstaction layer and
 therefore it would not be too complex to support different operating systems,
-however currently only FreeRTOS[²] is used in practice and there may be some
+however currently only [FreeRTOS](#freertos) is used in practice and there may be some
 direct hooks into the FreeRTOS kernel in the code.
 
 # Application header
@@ -62,6 +62,7 @@ tool against the compiled binaries to see it.
 
 ________________________________________________________________________________
 
-[¹]: [TinyOS](https://github.com/tinyos/tinyos-main)
-[²]: [FreeRTOS](https://github.com/aws/amazon-freertos)
-[³⁴⁵⁶⁷⁸⁹⁰]
+##### TinyOS
+https://github.com/tinyos/tinyos-main
+##### FreeRTOS
+https://github.com/aws/amazon-freertos
