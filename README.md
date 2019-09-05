@@ -6,19 +6,20 @@ The embedded node platform consists of a relatively generic embedded real-time
 operating system, microcontroller/platform APIs and libraries and a simple
 buildsystem. The platform is mostly focused for devices that use an 802.15.4
 compatible wireless radio for communications. The specific 802.15.4 messaging
-schema is based on and compatible with the [TinyOS](#tinyos) ActiveMessage principles.
+schema is based on and compatible with the
+[TinyOS](https://github.com/tinyos/tinyos-main) ActiveMessage principles.
 
 # Applications
 
 ## Blink
 Blink is a simple application that blinks LEDs at different frequencies. It
-demonstates OS setup and using threads, mutexes and timers.
+demonstrates OS setup and using threads, mutexes and timers.
 
 See [Blink readme](apps/blink-silabs/README.md) for details.
 
 ## RadioCountToLeds
 RadioCountToLeds is a simple application that broadcasts a counter value to the
-network and displays received counter values on LEDs. It demonstates OS setup,
+network and displays received counter values on LEDs. It demonstrates OS setup,
 using threads, mutexes, timers and the MistComm Radio API.
 
 See [RadioCountToLeds readme](apps/radio-count-to-leds-silabs/README.md) for details.
@@ -49,10 +50,10 @@ git submodule init
 git submodule update
 ```
 Initially the submodules will be pointing to the correct commits/states of their
-respective repositories, but in a detached-head state. The actual they should be
-checked out to are listed in the [gitmodules](.gitmodules) file. Install
-[git-submodule-gizmos](https://github.com/raidoz/git-submodule-gizmos) to get
-a tool for easier managemnt of the branches.
+respective repositories, but in a detached-head state. The actual branches they
+should be checked out to are listed in the [gitmodules](.gitmodules) file.
+Install [git-submodule-gizmos](https://github.com/raidoz/git-submodule-gizmos)
+to get a tool for easier management of the branches.
 
 # APIs
 
@@ -62,16 +63,16 @@ Radio communications are performed throught the
 The API is still a prototype, but is intended to support global addressing
 without having to know the network hierarcy. It uses IEEE EUI-64 identifiers for
 identifying endpoints (device identity, not just network address). The MistComm
-layer is supposed to include an address translation layer to resolve the next
-hop address for EUI-64 destinations, but this has not been finalized and for the
-current examples, it only implements direct ActiveMessage addressing.
+layer is supposed to include an address translation layer to resolve the
+next-hop address for EUI-64 destinations, but this has not been finalized and
+for the current examples, it only implements direct ActiveMessage addressing.
 *The MistComm API will change*
 
 ## SPI/I2C
 SPI/I2C interfaces are handled through RETARGET_Spi and RETARGET_I2C APIs, that
 themselves are configured through retargetspiconfig.h and retargeti2cconfig.h.
 This limits the application to a single instance of each bus, if needed,
-additionalinstances need to be handled manually. RETARGET_Spi supports several
+additional instances need to be handled manually. RETARGET_Spi supports several
 chip-select signals.
 
 ## Debug output
@@ -87,8 +88,9 @@ A good tool for receiving the output from a serial port is
 # Embbedded operating system
 The node platform is built around the ARM CMSIS RTOS abstaction layer and
 therefore it would not be too complex to support different operating systems,
-however currently only [FreeRTOS](#freertos) is used in practice and there may be some
-direct hooks into the FreeRTOS kernel in the code.
+however currently only [FreeRTOS](https://github.com/aws/amazon-freertos) is
+used in practice and there may be some direct hooks into the FreeRTOS kernel in
+the code.
 
 # Application header
 The compiled binary includes an information header that provides some details on
@@ -118,9 +120,11 @@ can be selected by specifying the FTDI_ID variable:
 make tsb install FTDI_ID=3
 ```
 
-________________________________________________________________________________
+# Coding rules
 
-##### TinyOS
-https://github.com/tinyos/tinyos-main
-##### FreeRTOS
-https://github.com/aws/amazon-freertos
+Code in this repository must conform to the
+[BARR-C:2018](https://barrgroup.com/Embedded-Systems/Books/Embedded-C-Coding-Standard)
+coding rules with the following permitted exceptions:
+- Lines are allowed to be up to 120 characters long, keeping them shorter is
+  however recommended.
+- static module-level variables must be prefixed with m_, global ones with g_.
