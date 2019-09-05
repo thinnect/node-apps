@@ -42,16 +42,43 @@
 #include "incbin.h"
 INCBIN(Header, "header.bin");
 
+static void led0_timer_cb(void* argument)
+{
+	debug1("led0 timer");
+	PLATFORM_LedsSet(PLATFORM_LedsGet()^1);
+}
+
+static void led1_timer_cb(void* argument)
+{
+	debug1("led1 timer");
+	PLATFORM_LedsSet(PLATFORM_LedsGet()^2);
+}
+
+static void led2_timer_cb(void* argument)
+{
+	debug1("led2 timer");
+	PLATFORM_LedsSet(PLATFORM_LedsGet()^4);
+}
+
 // App loop - blinks leds
 void app_loop ()
 {
-	uint8_t leds = 0;
+	osDelay(1000);
+
+	osTimerId_t led0_timer = osTimerNew(&led0_timer_cb, osTimerPeriodic, NULL, NULL);
+	osTimerId_t led1_timer = osTimerNew(&led1_timer_cb, osTimerPeriodic, NULL, NULL);
+	osTimerId_t led2_timer = osTimerNew(&led2_timer_cb, osTimerPeriodic, NULL, NULL);
+
+	debug1("t1 %p t2 %p t3 %p", led0_timer, led1_timer, led2_timer);
+
+	osTimerStart(led0_timer, 1000);
+	osTimerStart(led1_timer, 2000);
+	osTimerStart(led2_timer, 4000);
+
 	for (;;)
 	{
-		PLATFORM_LedsSet(leds);
-		info1("leds %u", (unsigned int)leds);
+		info1("leds %u", (unsigned int)PLATFORM_LedsGet());
 		osDelay(1000);
-		leds++;
 	}
 }
 

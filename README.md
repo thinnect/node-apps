@@ -8,6 +8,12 @@ buildsystem. The platform is mostly focused for devices that use an 802.15.4
 compatible wireless radio for communications. The specific 802.15.4 messaging
 schema is based on and compatible with the [TinyOS](#tinyos) ActiveMessage principles.
 
+# Applications
+
+## Blink
+
+## RadioCountToLeds
+
 # Platforms
 Currently the examples only cover SiLabs Wireless Gecko based devices.
 There are several SiLabs development boards that are supported, see
