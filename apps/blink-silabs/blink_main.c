@@ -42,89 +42,101 @@
 #include "incbin.h"
 INCBIN(Header, "header.bin");
 
+static osMutexId_t m_led_mutex;
+
 static void led0_timer_cb(void* argument)
 {
-	debug1("led0 timer");
-	PLATFORM_LedsSet(PLATFORM_LedsGet()^1);
+    osMutexAcquire(m_led_mutex, osWaitForever);
+    debug1("led0 timer");
+    PLATFORM_LedsSet(PLATFORM_LedsGet()^1);
+    osMutexRelease(m_led_mutex);
 }
 
 static void led1_timer_cb(void* argument)
 {
-	debug1("led1 timer");
-	PLATFORM_LedsSet(PLATFORM_LedsGet()^2);
+    osMutexAcquire(m_led_mutex, osWaitForever);
+    debug1("led1 timer");
+    PLATFORM_LedsSet(PLATFORM_LedsGet()^2);
+    osMutexRelease(m_led_mutex);
 }
 
 static void led2_timer_cb(void* argument)
 {
-	debug1("led2 timer");
-	PLATFORM_LedsSet(PLATFORM_LedsGet()^4);
+    osMutexAcquire(m_led_mutex, osWaitForever);
+    debug1("led2 timer");
+    PLATFORM_LedsSet(PLATFORM_LedsGet()^4);
+    osMutexRelease(m_led_mutex);
 }
 
-// App loop - blinks leds
+// App loop - do setup and periodically print status
 void app_loop ()
 {
-	osDelay(1000);
+    m_led_mutex = osMutexNew(NULL);
 
-	osTimerId_t led0_timer = osTimerNew(&led0_timer_cb, osTimerPeriodic, NULL, NULL);
-	osTimerId_t led1_timer = osTimerNew(&led1_timer_cb, osTimerPeriodic, NULL, NULL);
-	osTimerId_t led2_timer = osTimerNew(&led2_timer_cb, osTimerPeriodic, NULL, NULL);
+    osDelay(1000);
 
-	debug1("t1 %p t2 %p t3 %p", led0_timer, led1_timer, led2_timer);
+    osTimerId_t led0_timer = osTimerNew(&led0_timer_cb, osTimerPeriodic, NULL, NULL);
+    osTimerId_t led1_timer = osTimerNew(&led1_timer_cb, osTimerPeriodic, NULL, NULL);
+    osTimerId_t led2_timer = osTimerNew(&led2_timer_cb, osTimerPeriodic, NULL, NULL);
 
-	osTimerStart(led0_timer, 1000);
-	osTimerStart(led1_timer, 2000);
-	osTimerStart(led2_timer, 4000);
+    debug1("t1 %p t2 %p t3 %p", led0_timer, led1_timer, led2_timer);
 
-	for (;;)
-	{
-		info1("leds %u", (unsigned int)PLATFORM_LedsGet());
-		osDelay(1000);
-	}
+    osTimerStart(led0_timer, 1000);
+    osTimerStart(led1_timer, 2000);
+    osTimerStart(led2_timer, 4000);
+
+    for (;;)
+    {
+        osMutexAcquire(m_led_mutex, osWaitForever);
+        info1("leds %u", (unsigned int)PLATFORM_LedsGet());
+        osMutexRelease(m_led_mutex);
+        osDelay(1000);
+    }
 }
 
 int logger_fwrite_boot (const char *ptr, int len)
 {
-	fwrite(ptr, len, 1, stdout);
-	fflush(stdout);
-	return len;
+    fwrite(ptr, len, 1, stdout);
+    fflush(stdout);
+    return len;
 }
 
 int main ()
 {
-	PLATFORM_Init();
+    PLATFORM_Init();
 
-	CMU_ClockEnable(cmuClock_GPIO, true);
-	CMU_ClockEnable(cmuClock_PRS, true);
+    CMU_ClockEnable(cmuClock_GPIO, true);
+    CMU_ClockEnable(cmuClock_PRS, true);
 
-	// LEDs
-	PLATFORM_LedsInit();
+    // LEDs
+    PLATFORM_LedsInit();
 
-	// Configure debug output
-	RETARGET_SerialInit();
-	log_init(BASE_LOG_LEVEL, &logger_fwrite_boot, NULL);
+    // Configure debug output
+    RETARGET_SerialInit();
+    log_init(BASE_LOG_LEVEL, &logger_fwrite_boot, NULL);
 
-	info1("Blink "VERSION_STR" (%d.%d.%d)", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
+    info1("Blink "VERSION_STR" (%d.%d.%d)", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
 
-	// Initialize OS kernel
-	osKernelInitialize();
+    // Initialize OS kernel
+    osKernelInitialize();
 
-	// Create a thread
-	const osThreadAttr_t app_thread_attr = { .name = "app" };
-	osThreadNew(app_loop, NULL, &app_thread_attr);
+    // Create a thread
+    const osThreadAttr_t app_thread_attr = { .name = "app" };
+    osThreadNew(app_loop, NULL, &app_thread_attr);
 
-	if (osKernelReady == osKernelGetState())
-	{
-		// Switch to a thread-safe logger
-		logger_fwrite_init();
-		log_init(BASE_LOG_LEVEL, &logger_fwrite, NULL);
+    if (osKernelReady == osKernelGetState())
+    {
+        // Switch to a thread-safe logger
+        logger_fwrite_init();
+        log_init(BASE_LOG_LEVEL, &logger_fwrite, NULL);
 
-		// Start the kernel
-		osKernelStart();
-	}
-	else
-	{
-		err1("!osKernelReady");
-	}
+        // Start the kernel
+        osKernelStart();
+    }
+    else
+    {
+        err1("!osKernelReady");
+    }
 
-	for(;;);
+    for(;;);
 }

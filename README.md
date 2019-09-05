@@ -11,11 +11,20 @@ schema is based on and compatible with the [TinyOS](#tinyos) ActiveMessage princ
 # Applications
 
 ## Blink
+Blink is a simple application that blinks LEDs at different frequencies. It
+demonstates OS setup and using threads, mutexes and timers.
+
+See [Blink readme](apps/blink-silabs/README.md) for details.
 
 ## RadioCountToLeds
+RadioCountToLeds is a simple application that broadcasts a counter value to the
+network and displays received counter values on LEDs. It demonstates OS setup,
+using threads, mutexes, timers and the MistComm Radio API.
+
+See [RadioCountToLeds readme](apps/radio-count-to-leds-silabs/README.md) for details.
 
 # Platforms
-Currently the examples only cover SiLabs Wireless Gecko based devices.
+Currently the examples only cover some SiLabs Wireless Gecko based devices.
 There are several SiLabs development boards that are supported, see
 [dev-platforms](https://github.com/thinnect/dev-platforms/) or run `make` in one
 of the example projects for a list of supported targets.
@@ -55,6 +64,9 @@ platform has a designated Debug UART, which is configured in the platforms
 `retargetserialconfig.h`. Loglevels can be tweaked by setting the BASE_LOG_LEVEL
 and modifying the individual levels in each examples respective `loglevels.h` file.
 
+A good tool for receiving the output from a serial port is
+[serial-logger](https://github.com/thinnect/serial-logger).
+
 # Embbedded operating system
 The node platform is built around the ARM CMSIS RTOS abstaction layer and
 therefore it would not be too complex to support different operating systems,
@@ -65,6 +77,29 @@ direct hooks into the FreeRTOS kernel in the code.
 The compiled binary includes an information header that provides some details on
 the binary and a checksum. Run the [headeredit](https://bitbucket.org/rebane/headeredit)
 tool against the compiled binaries to see it.
+
+# Build and flash
+
+To build an example application, enter the applications directory and build
+it for one of the supported platforms with `make PLATFORM_NAME` and flash to the
+device with `make PLATFORM_NAME install`.
+
+For example to install on a Thunderboard Sense, run:
+```
+make thunderboard
+make thunderboard install
+```
+
+The thunderboard target and other SiLabs development targets use the built-in
+J-Link programmer by default and only a single board can be connected to the PC
+at a time.
+
+The Thinnect TestSystemBoard has a built-in ft2232d based programmer and uses
+OpenOCD and ftdiutil (see [INSTALL](INSTALL.md) for details). A specific device
+can be selected by specifying the FTDI_ID variable:
+```
+make tsb install FTDI_ID=3
+```
 
 ________________________________________________________________________________
 

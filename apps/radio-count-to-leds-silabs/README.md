@@ -22,13 +22,18 @@ with changes and improvements.
 The application has been tested and should work with the following platforms:
  * Thinnect TestSystemBoard (tsb)
  * SiLabs Thunderboard Sense (thunderboard)
- * SiLabs Thunderboard Sense 2 (thunderboard)
+ * SiLabs Thunderboard Sense 2 (thunderboard2)
  * SiLabs BRD4001A + BRD4161A (brd4161a-mb)
  * SiLabs BRD4001A + BRD4162A (brd4162a-mb)
  * SiLabs BRD4001A + BRD4304A (brd4304a-mb)
 
 TODO Series2 boards:
  * SiLabs BRD4001A + BRD4180A (brd4180a-mb)
+
+# Build
+Standard build options apply, check the main [README](../../README.md).
+Additionally the device address can be set at compile time, see
+[the next chapter](#device_address_/_signature) for details.
 
 # Device address / signature
 
@@ -42,4 +47,5 @@ If the device does not have a signature, then the application will
 initialize the radio with the value defined with DEFAULT_AM_ADDR. For example
 to set the address to 0xABCD in the firmware for a Thunderboard Sense 2, make
 can be called `make thunderboard2 DEFAULT_AM_ADDR=0xABCD`. It is necessary to
-call `make clean` manually when changing the `DEFAULT_AM_ADDR` value.
+call `make clean` manually when changing the `DEFAULT_AM_ADDR` value as the
+buildsystem is unable to recognize changes of environment variables.
