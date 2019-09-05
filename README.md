@@ -37,6 +37,23 @@ source on non-deb distributions.
 
 Installation is covered in detail in [INSTALL](INSTALL.md).
 
+# Setup
+This repository relies on several dependencies that are all publically available
+on [GitHub](https://github.com) and they have been linked to the repository as
+submodules. After cloning the repository, the submodules need to be initialized
+and updated.
+```
+git clone git@github.com:thinnect/node-apps.git
+cd node-apps
+git submodule init
+git submodule update
+```
+Initially the submodules will be pointing to the correct commits/states of their
+respective repositories, but in a detached-head state. The actual they should be
+checked out to are listed in the [gitmodules](.gitmodules) file. Install
+[git-submodule-gizmos](https://github.com/raidoz/git-submodule-gizmos) to get
+a tool for easier managemnt of the branches.
+
 # APIs
 
 ## MistComm
