@@ -108,7 +108,7 @@ void app_loop ()
     }
     else
     {
-        warn1("ADDR:%"PRIX16); // Falling back to default addr
+        warn1("ADDR:%"PRIX16, node_addr); // Falling back to default addr
     }
 
     // initialize radio

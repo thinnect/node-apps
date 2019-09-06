@@ -81,6 +81,7 @@ FREERTOS_SRC = $(wildcard $(FREERTOS_DIR)/*.c) \
                $(ZOO)/thinnect.cmsis-freertos/silabs/cmsis_os2.c \
                $(ZOO)/thinnect.cmsis-freertos/silabs/freertos_evr.c \
                $(ZOO)/thinnect.cmsis-freertos/silabs/FreeRTOS_Tick_Config.c
+CMSIS_CONFIG_DIR ?= $(ZOO)/thinnect.cmsis-freertos/silabs/config
 
 RAIL_INC = -I$(SILABS_SDKDIR)/platform/radio/rail_lib/hal \
            -I$(SILABS_SDKDIR)/platform/radio/rail_lib/common \

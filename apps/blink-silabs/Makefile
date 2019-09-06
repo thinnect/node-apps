@@ -76,6 +76,7 @@ FREERTOS_SRC = $(wildcard $(FREERTOS_DIR)/*.c) \
                $(ZOO)/thinnect.cmsis-freertos/silabs/cmsis_os2.c \
                $(ZOO)/thinnect.cmsis-freertos/silabs/freertos_evr.c \
                $(ZOO)/thinnect.cmsis-freertos/silabs/FreeRTOS_Tick_Config.c
+CMSIS_CONFIG_DIR ?= $(ZOO)/thinnect.cmsis-freertos/silabs/config
 
 # List all source files in the project
 SOURCES = blink_main.c
