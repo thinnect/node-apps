@@ -61,28 +61,30 @@ note of where SimplicityStudio_v4 ended up, if you followed the steps above,
 then it should be stored at /home/user/SimplicityStudio_v4, which is the default
 for SILABS_SDKDIR in the Makefiles.
 
-# OpenOCD
-
-Some boards require OpenOCD for flashing devices. Currently the version
-distributed with Ubuntu is able to flash Series 1 chips, but not the User
-Signature page or Series 2 chips. A version capable of flashing the User
-Signature page and Series 2 chips can be obtained from
-[OpenOCD](https://bitbucket.org/thinnect/openocd/src/thinnect-patches).
-
-TODO: A debian package will be available from the Thinnect APT repository.
-
-# ftdiutil
-When using the ft2232d programmer, an additional utility is helpful for triggering
-reset and managing the UARTs of the programmer. The tool can be obtained from
-[ftdiutil}(https://bitbucket.org/rebane/ft2232d/src/master/software/ftdiutil/).
-The directory containing the compiled binary just needs to be in the $PATH.
-
-TODO: A debian package will be available from the Thinnect APT repository.
-
 # Headeredit
 The headeredit tool is needed for embedding metadata into firmware images. The
 tool can be obtained from [Headeredit](https://bitbucket.org/rebane/headeredit/src/master/).
 The directory containing the compiled binary just needs to be in the $PATH or
 the HEADEREDIT variable can be used to point to a custom location.
+
+TODO: A debian package will be available from the Thinnect APT repository.
+
+# OpenOCD (optional)
+
+Some boards require OpenOCD for flashing devices.
+OpenOCD is not needed for any of the official SiLabs development kits.
+
+Currently the OpenOCD version distributed with Ubuntu is able to flash Series 1
+chips, but not the User Signature page or Series 2 chips. A version capable of
+flashing the User Signature page and Series 2 chips can be obtained from
+[OpenOCD](https://bitbucket.org/thinnect/openocd/src/thinnect-patches).
+
+TODO: A debian package will be available from the Thinnect APT repository.
+
+# ftdiutil (optional)
+When using the ft2232d programmer with OpenOCD, an additional utility is needed
+for triggering reset and managing the UARTs of the programmer. The tool can be
+obtained from [ftdiutil}(https://bitbucket.org/rebane/ft2232d/src/master/software/ftdiutil/).
+The directory containing the compiled binary just needs to be in the $PATH.
 
 TODO: A debian package will be available from the Thinnect APT repository.
