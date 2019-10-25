@@ -44,3 +44,12 @@
 	path = zoo/graphitemaster.incbin
 	url = https://github.com/graphitemaster/incbin.git
 	branch = master
+
+[submodule "zoo/prolab.motexml"]
+	path = zoo/prolab.motexml
+	url = https://github.com/proactivity-lab/motexml.git
+	branch = master
+[submodule "zoo/prolab.dt-types"]
+	path = zoo/prolab.dt-types
+	url = https://github.com/proactivity-lab/dt-types.git
+	branch = master
