@@ -136,7 +136,11 @@ void app_loop ()
     else
     {
         warn1("ADDR:%"PRIX16, node_addr); // Falling back to default addr
+        memset(node_eui, 0, sizeof(node_eui));
+        node_eui[6] = (uint8_t)(node_addr >> 8);
+        node_eui[7] = (uint8_t)node_addr;
     }
+    debugb1("EUI:", node_eui, sizeof(node_eui));
 
     // initialize radio
     comms_layer_t* radio = radio_setup(node_addr);
@@ -165,7 +169,7 @@ void app_loop ()
             {
                 uint8_t len = sizeof(mist_frag_message_t);
 
-                packet->seq = 0xFF & seqnum;
+                packet->seq = (uint8_t)seqnum;
                 packet->frag = 0;
                 packet->frags = 1;
 
