@@ -23,6 +23,10 @@
 	url = https://github.com/thinnect/device-signature.git
 	branch = master
 
+[submodule "zoo/FreeRTOS-Kernel"]
+	path = zoo/FreeRTOS-Kernel
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel
+	branch = master
 [submodule "zoo/thinnect.cmsis-freertos"]
 	path = zoo/thinnect.cmsis-freertos
 	url = https://github.com/thinnect/cmsis-freertos
@@ -39,8 +43,4 @@
 [submodule "zoo/graphitemaster.incbin"]
 	path = zoo/graphitemaster.incbin
 	url = https://github.com/graphitemaster/incbin.git
-	branch = master
-[submodule "zoo/aws.amazon-freertos"]
-	path = zoo/aws.amazon-freertos
-	url = https://github.com/aws/amazon-freertos.git
 	branch = master
