@@ -11,16 +11,6 @@
 #include <string.h>
 #include <inttypes.h>
 
-#include "em_chip.h"
-#include "em_rmu.h"
-#include "em_emu.h"
-#include "em_cmu.h"
-#include "em_gpio.h"
-#include "em_msc.h"
-#include "em_i2c.h"
-#include "em_adc.h"
-#include "em_usart.h"
-
 #include "retargetserial.h"
 #include "retargetspi.h"
 
@@ -61,6 +51,8 @@ void app_loop ()
 	    uint8_t jedec[4] = {0};
 	    RETARGET_SpiTransferHalf(0, "\x9F", 1, jedec, 4);
 	    info1("jedec %02x%02x%02x%02x", jedec[0], jedec[1], jedec[2], jedec[3]);
+        // C22814?? MX25R8035F
+        // 016017?? IS25LP064D
 
 		// Put dataflash into deep sleep
 		RETARGET_SpiTransferHalf(0, "\xB9", 1, NULL, 0);
@@ -83,9 +75,6 @@ int logger_fwrite_boot (const char *ptr, int len)
 int main ()
 {
     PLATFORM_Init();
-
-    CMU_ClockEnable(cmuClock_GPIO, true);
-    CMU_ClockEnable(cmuClock_PRS, true);
 
     // LEDs
     PLATFORM_LedsInit();

@@ -71,6 +71,8 @@ VERSION_BIN             := $(shell printf "%02X" $(VERSION_MAJOR))$(shell printf
 VERSION_STR             := "$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)"$(VERSION_DEVEL)
 BUILD_TIMESTAMP         := $(shell date '+%s')
 
+NODE_PLATFORM_DIR       := $(ZOO)/thinnect.node-platform
+
 FREERTOS_DIR ?= $(ZOO)/FreeRTOS-Kernel
 FREERTOS_INC = -I$(FREERTOS_DIR)/include \
                -I$(FREERTOS_DIR)/portable/GCC/ARM_CM3 \
@@ -110,11 +112,11 @@ SOURCES += \
     $(SILABS_SDKDIR)/platform/emlib/src/em_ldma.c \
     $(SILABS_SDKDIR)/platform/emlib/src/em_msc.c \
     $(SILABS_SDKDIR)/platform/emlib/src/em_timer.c \
-    $(ZOO)/thinnect.node-platform/silabs/logger_fwrite.c \
+    $(NODE_PLATFORM_DIR)/silabs/logger_fwrite.c \
     $(ZOO)/thinnect.lll/logging/loggers_ext.c \
     $(ZOO)/lammertb.libcrc/src/crcccitt.c \
-    $(ZOO)/thinnect.node-platform/silabs/radio_rtos.c \
-    $(ZOO)/thinnect.node-platform/common/radio_seqNum.c \
+    $(NODE_PLATFORM_DIR)/silabs/radio_rtos.c \
+    $(NODE_PLATFORM_DIR)/common/radio_seqNum.c \
     $(wildcard $(ZOO)/thinnect.mist-comm/am/*.c) \
     $(wildcard $(ZOO)/thinnect.mist-comm/api/*.c) \
     $(RAIL_SRC) \
@@ -126,7 +128,7 @@ INCLUDES += \
     -I. \
     -I$(ZOO)/graphitemaster.incbin \
     -I$(ZOO)/jtbr.endianness \
-    -I$(ZOO)/thinnect.node-platform/include \
+    -I$(NODE_PLATFORM_DIR)/include \
     -I$(ZOO)/thinnect.device-signature/signature/ \
     -I$(ZOO)/thinnect.device-signature/area/ \
     -I$(SILABS_SDKDIR)/hardware/kit/common/drivers \
