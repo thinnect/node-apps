@@ -1,13 +1,20 @@
-# This is the main makefile for blink firmware
+# This is the main makefile for RadioCountToLeds firmware
 
 # _______________________ User overridable configuration _______________________
 
-PROJECT_NAME            ?= blink
+PROJECT_NAME            ?= radiocounttoleds
 
 VERSION_MAJOR           ?= 1
 VERSION_MINOR           ?= 0
 VERSION_PATCH           ?= 0
 VERSION_DEVEL           ?= "-dev"
+
+RADIO_CHANNEL           ?= 13
+
+# Set device address at compile time for cases where a signature is not present
+DEFAULT_AM_ADDR         ?= 1
+# Set destination address at compile time
+DESTINATION_GATEWAY_ADDRESS ?= 0xFFFF
 
 # No bootloader, app starts at 0
 APP_START               = 0
@@ -78,8 +85,22 @@ FREERTOS_SRC = $(wildcard $(FREERTOS_DIR)/*.c) \
                $(ZOO)/thinnect.cmsis-freertos/silabs/FreeRTOS_Tick_Config.c
 CMSIS_CONFIG_DIR ?= $(ZOO)/thinnect.cmsis-freertos/silabs/config
 
+RAIL_INC = -I$(SILABS_SDKDIR)/platform/radio/rail_lib/hal \
+           -I$(SILABS_SDKDIR)/platform/radio/rail_lib/common \
+           -I$(SILABS_SDKDIR)/platform/radio/rail_lib/protocol/ieee802154 \
+           -I$(SILABS_SDKDIR)/platform/radio/rail_lib/plugin/pa-conversions \
+
+RAIL_SRC =  $(SILABS_SDKDIR)/platform/radio/rail_lib/hal/hal_common.c
+
+# MoteXML components
+MOTEXML_DIR ?= $(ZOO)/prolab.motexml
+DTTYPES_DIR ?= $(ZOO)/prolab.dt-types
+MOTEXML_INC = -I$(MOTEXML_DIR)/lib -I$(DTTYPES_DIR)
+MOTEXML_SRC = $(MOTEXML_DIR)/lib/MLE.c $(MOTEXML_DIR)/lib/MLD.c $(MOTEXML_DIR)/lib/MLI.c
+CFLAGS += -DLIBEXPORT=""
+
 # List all source files in the project
-SOURCES = blink_main.c
+SOURCES = tsnd_main.c
 
 # Sources for dependencies and Silabs libraries
 SOURCES += \
@@ -101,6 +122,12 @@ SOURCES += \
     $(ZOO)/thinnect.node-platform/silabs/logger_fwrite.c \
     $(ZOO)/thinnect.lll/logging/loggers_ext.c \
     $(ZOO)/lammertb.libcrc/src/crcccitt.c \
+    $(ZOO)/thinnect.node-platform/silabs/radio_rtos.c \
+    $(ZOO)/thinnect.node-platform/common/radio_seqNum.c \
+    $(wildcard $(ZOO)/thinnect.mist-comm/am/*.c) \
+    $(wildcard $(ZOO)/thinnect.mist-comm/api/*.c) \
+    $(RAIL_SRC) \
+    $(MOTEXML_SRC) \
     $(FREERTOS_SRC)
 
 # All include directories
@@ -116,7 +143,10 @@ INCLUDES += \
     -I$(SILABS_SDKDIR)/platform/halconfig/inc/hal-config \
     -I$(SILABS_SDKDIR)/platform/emlib/inc \
     -I$(ZOO)/thinnect.lll/logging \
+    -I$(ZOO)/thinnect.mist-comm/include -I$(ZOO)/thinnect.mist-comm/include/compat \
     -I$(ZOO)/lammertb.libcrc/include \
+    $(RAIL_INC) \
+    $(MOTEXML_INC) \
     $(FREERTOS_INC)
 
 # ------------------------------------------------------------------------------
@@ -128,6 +158,9 @@ $(call passVarToCpp,CFLAGS,VERSION_MAJOR)
 $(call passVarToCpp,CFLAGS,VERSION_MINOR)
 $(call passVarToCpp,CFLAGS,VERSION_PATCH)
 $(call passVarToCpp,CFLAGS,VERSION_STR)
+$(call passVarToCpp,CFLAGS,RADIO_CHANNEL)
+$(call passVarToCpp,CFLAGS,DEFAULT_AM_ADDR)
+$(call passVarToCpp,CFLAGS,DESTINATION_GATEWAY_ADDRESS)
 
 # _______________________________ Project rules _______________________________
 

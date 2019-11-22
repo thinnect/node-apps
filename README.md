@@ -88,9 +88,8 @@ A good tool for receiving the output from a serial port is
 # Embbedded operating system
 The node platform is built around the ARM CMSIS RTOS abstaction layer and
 therefore it would not be too complex to support different operating systems,
-however currently only [FreeRTOS](https://github.com/aws/amazon-freertos) is
-used in practice and there may be some direct hooks into the FreeRTOS kernel in
-the code.
+however currently only [FreeRTOS](https://github.com/FreeRTOS) is used in
+practice and there may be some direct hooks into the FreeRTOS kernel in the code.
 
 # Application header
 The compiled binary includes an information header that provides some details on
@@ -114,8 +113,8 @@ J-Link programmer by default and only a single board can be connected to the PC
 at a time.
 
 The Thinnect TestSystemBoard has a built-in ft2232d based programmer and uses
-OpenOCD and ftdiutil (see [INSTALL](INSTALL.md) for details). A specific device
-can be selected by specifying the FTDI_ID variable:
+a modified version of OpenOCD (see [INSTALL](INSTALL.md) for details).
+A specific device can be selected by specifying the FTDI_ID variable:
 ```
 make tsb install FTDI_ID=3
 ```

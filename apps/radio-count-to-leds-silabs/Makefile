@@ -71,7 +71,7 @@ VERSION_BIN             := $(shell printf "%02X" $(VERSION_MAJOR))$(shell printf
 VERSION_STR             := "$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)"$(VERSION_DEVEL)
 BUILD_TIMESTAMP         := $(shell date '+%s')
 
-FREERTOS_DIR ?= $(ZOO)/aws.amazon-freertos/freertos_kernel
+FREERTOS_DIR ?= $(ZOO)/FreeRTOS-Kernel
 FREERTOS_INC = -I$(FREERTOS_DIR)/include \
                -I$(FREERTOS_DIR)/portable/GCC/ARM_CM3 \
                -I$(ZOO)/thinnect.cmsis-freertos/silabs

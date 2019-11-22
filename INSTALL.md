@@ -67,7 +67,13 @@ tool can be obtained from [Headeredit](https://bitbucket.org/rebane/headeredit/s
 The directory containing the compiled binary just needs to be in the $PATH or
 the HEADEREDIT variable can be used to point to a custom location.
 
-TODO: A debian package will be available from the Thinnect APT repository.
+A debian package is also available from the Thinnect APT repository.
+```
+curl https://artifacts.thinnect.net/repository/certificates/pgp/APTPackager.pub.asc | sudo apt-key add --
+echo "deb [arch=amd64] https://artifacts.thinnect.net/repository/public/ stretch main" >> /etc/apt/sources.list.d/thinnect.public.list
+sudo apt update
+sudo apt install headeredit
+```
 
 # OpenOCD (optional)
 
@@ -79,12 +85,15 @@ chips, but not the User Signature page or Series 2 chips. A version capable of
 flashing the User Signature page and Series 2 chips can be obtained from
 [OpenOCD](https://bitbucket.org/thinnect/openocd/src/thinnect-patches).
 
-TODO: A debian package will be available from the Thinnect APT repository.
+A debian package is also available from the Thinnect APT repository.
+```
+curl https://artifacts.thinnect.net/repository/certificates/pgp/APTPackager.pub.asc | sudo apt-key add --
+echo "deb [arch=amd64] https://artifacts.thinnect.net/repository/public/ stretch main" >> /etc/apt/sources.list.d/thinnect.public.list
+sudo apt update
+sudo apt install openocd
+```
 
-# ftdiutil (optional)
-When using the ft2232d programmer with OpenOCD, an additional utility is needed
-for triggering reset and managing the UARTs of the programmer. The tool can be
-obtained from [ftdiutil}(https://bitbucket.org/rebane/ft2232d/src/master/software/ftdiutil/).
-The directory containing the compiled binary just needs to be in the $PATH.
-
-TODO: A debian package will be available from the Thinnect APT repository.
+To install support for the FTDI based programmer on the TSB board, also install `openocd-ftdi-thinnect`
+```
+sudo apt install openocd-ftdi-thinnect
+```
