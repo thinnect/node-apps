@@ -14,7 +14,6 @@ APP_START               = 0
 
 # Common build options - some of these should be moved to targets/boards
 CFLAGS                  += -Os -g -Wall -std=c99
-CFLAGS                  += -specs=nano.specs -specs=nosys.specs
 CFLAGS                  += -ffunction-sections -fdata-sections -ffreestanding -fsingle-precision-constant -Wstrict-aliasing=0
 CFLAGS                  += -D__START=main -D__STARTUP_CLEAR_BSS
 CFLAGS                  += -DVTOR_START_LOCATION=$(APP_START)
@@ -66,6 +65,8 @@ VERSION_BIN             := $(shell printf "%02X" $(VERSION_MAJOR))$(shell printf
 VERSION_STR             := "$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)"$(VERSION_DEVEL)
 BUILD_TIMESTAMP         := $(shell date '+%s')
 
+NODE_PLATFORM_DIR       := $(ZOO)/thinnect.node-platform
+
 FREERTOS_DIR ?= $(ZOO)/FreeRTOS-Kernel
 FREERTOS_INC = -I$(FREERTOS_DIR)/include \
                -I$(FREERTOS_DIR)/portable/GCC/ARM_CM3 \
@@ -83,8 +84,6 @@ SOURCES = blink_main.c
 
 # Sources for dependencies and Silabs libraries
 SOURCES += \
-    $(ZOO)/thinnect.device-signature/signature/DeviceSignature.c \
-    $(ZOO)/thinnect.device-signature/area/silabs/SignatureArea.c \
     $(SILABS_SDKDIR)/hardware/kit/common/drivers/retargetserial.c \
     $(SILABS_SDKDIR)/hardware/kit/common/drivers/retargetio.c \
     $(SILABS_SDKDIR)/platform/emlib/src/em_system.c \
@@ -98,7 +97,9 @@ SOURCES += \
     $(SILABS_SDKDIR)/platform/emlib/src/em_ldma.c \
     $(SILABS_SDKDIR)/platform/emlib/src/em_msc.c \
     $(SILABS_SDKDIR)/platform/emlib/src/em_timer.c \
-    $(ZOO)/thinnect.node-platform/silabs/logger_fwrite.c \
+    $(NODE_PLATFORM_DIR)/silabs/logger_fwrite.c \
+    $(ZOO)/thinnect.device-signature/signature/DeviceSignature.c \
+    $(ZOO)/thinnect.device-signature/area/silabs/SignatureArea.c \
     $(ZOO)/thinnect.lll/logging/loggers_ext.c \
     $(ZOO)/lammertb.libcrc/src/crcccitt.c \
     $(FREERTOS_SRC)
@@ -107,9 +108,7 @@ SOURCES += \
 INCLUDES += \
     -I$(BUILD_DIR) \
     -I. \
-    -I$(ZOO)/graphitemaster.incbin \
-    -I$(ZOO)/jtbr.endianness \
-    -I$(ZOO)/thinnect.node-platform/include \
+    -I$(NODE_PLATFORM_DIR)/include \
     -I$(ZOO)/thinnect.device-signature/signature/ \
     -I$(ZOO)/thinnect.device-signature/area/ \
     -I$(SILABS_SDKDIR)/hardware/kit/common/drivers \
@@ -117,6 +116,8 @@ INCLUDES += \
     -I$(SILABS_SDKDIR)/platform/emlib/inc \
     -I$(ZOO)/thinnect.lll/logging \
     -I$(ZOO)/lammertb.libcrc/include \
+    -I$(ZOO)/graphitemaster.incbin \
+    -I$(ZOO)/jtbr.endianness \
     $(FREERTOS_INC)
 
 # ------------------------------------------------------------------------------

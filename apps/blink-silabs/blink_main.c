@@ -91,6 +91,10 @@ void app_loop ()
         info1("leds %u", (unsigned int)PLATFORM_LedsGet());
         osMutexRelease(m_led_mutex);
         osDelay(1000);
+        if(PLATFORM_ButtonGet())
+        {
+            info1("BUTTON");
+        }
     }
 }
 
@@ -110,6 +114,7 @@ int main ()
 
     // LEDs
     PLATFORM_LedsInit();
+    PLATFORM_ButtonPinInit();
 
     // Configure debug output
     RETARGET_SerialInit();
