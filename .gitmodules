@@ -1,11 +1,11 @@
 [submodule "zoo/thinnect.dev-platforms"]
 	path = zoo/thinnect.dev-platforms
 	url = https://github.com/thinnect/dev-platforms.git
-	branch = master
+	branch = new_tsbs
 [submodule "zoo/thinnect.node-buildsystem"]
 	path = zoo/thinnect.node-buildsystem
 	url = https://github.com/thinnect/node-buildsystem.git
-	branch = master
+	branch = m33
 [submodule "zoo/thinnect.node-platform"]
 	path = zoo/thinnect.node-platform
 	url = https://github.com/thinnect/node-platform.git
@@ -30,7 +30,7 @@
 [submodule "zoo/thinnect.cmsis-freertos"]
 	path = zoo/thinnect.cmsis-freertos
 	url = https://github.com/thinnect/cmsis-freertos
-	branch = master
+	branch = m33-update
 
 [submodule "zoo/jtbr.endianness"]
 	path = zoo/jtbr.endianness

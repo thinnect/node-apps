@@ -13,7 +13,7 @@ VERSION_DEVEL           ?= "-dev"
 APP_START               = 0
 
 # Common build options - some of these should be moved to targets/boards
-CFLAGS                  += -Os -g -Wall -std=c99
+CFLAGS                  += -Wall -std=c99
 CFLAGS                  += -ffunction-sections -fdata-sections -ffreestanding -fsingle-precision-constant -Wstrict-aliasing=0
 CFLAGS                  += -D__START=main -D__STARTUP_CLEAR_BSS
 CFLAGS                  += -DVTOR_START_LOCATION=$(APP_START)
@@ -47,7 +47,7 @@ PROGRAM_DEST_ADDR       ?= $(APP_START)
 # distributed with this project and must be installed with Simplicity Studio.
 # The variable needs to point at the subdirectory with the version number, set
 # it in Makefile.private or through the environment.
-SILABS_SDKDIR           ?= $(HOME)/SimplicityStudio_v4/developer/sdks/gecko_sdk_suite/v2.5
+SILABS_SDKDIR           ?= $(HOME)/SimplicityStudio_v4/developer/sdks/gecko_sdk_suite/v2.6
 
 # Pull in the developer's private configuration overrides and settings
 -include Makefile.private
@@ -69,15 +69,16 @@ NODE_PLATFORM_DIR       := $(ZOO)/thinnect.node-platform
 
 FREERTOS_DIR ?= $(ZOO)/FreeRTOS-Kernel
 FREERTOS_INC = -I$(FREERTOS_DIR)/include \
-               -I$(FREERTOS_DIR)/portable/GCC/ARM_CM3 \
-               -I$(ZOO)/thinnect.cmsis-freertos/silabs
+                $(FREERTOS_PORT_INC) \
+                -I$(ZOO)/thinnect.cmsis-freertos/CMSIS_5/CMSIS/RTOS2/Include \
+                -I$(ZOO)/thinnect.cmsis-freertos/CMSIS-FreeRTOS/CMSIS/RTOS2/FreeRTOS/Include \
+                -I$(ZOO)/thinnect.cmsis-freertos/$(MCU_ARCH)
+
 FREERTOS_SRC = $(wildcard $(FREERTOS_DIR)/*.c) \
-               $(FREERTOS_DIR)/portable/GCC/ARM_CM3/port.c \
-               $(FREERTOS_DIR)/portable/MemMang/heap_5.c \
-               $(ZOO)/thinnect.cmsis-freertos/silabs/cmsis_os2.c \
-               $(ZOO)/thinnect.cmsis-freertos/silabs/freertos_evr.c \
-               $(ZOO)/thinnect.cmsis-freertos/silabs/FreeRTOS_Tick_Config.c
-CMSIS_CONFIG_DIR ?= $(ZOO)/thinnect.cmsis-freertos/silabs/config
+               $(FREERTOS_PORT_SRC) \
+               $(ZOO)/thinnect.cmsis-freertos/CMSIS-FreeRTOS/CMSIS/RTOS2/FreeRTOS/Source/cmsis_os2.c
+
+CMSIS_CONFIG_DIR ?= $(ZOO)/thinnect.cmsis-freertos/$(MCU_ARCH)/config
 
 # List all source files in the project
 SOURCES = blink_main.c
