@@ -66,7 +66,7 @@ static bool m_sending = false;
 static osMutexId_t m_mutex;
 
 // Message has been sent
-static void radio_send_done (comms_layer_t * comms, comms_msg_t * msg, comms_error_t result, void * user)
+static void radio_send_done (comms_layer_t * comms, const comms_msg_t * msg, comms_error_t result, void * user)
 {
     logger(result == COMMS_SUCCESS ? LOG_DEBUG1: LOG_WARN1, "snt %u", result);
     osMutexAcquire(m_mutex, osWaitForever);
@@ -78,7 +78,7 @@ static void radio_send_done (comms_layer_t * comms, comms_msg_t * msg, comms_err
 // Perform basic radio setup
 static comms_layer_t* radio_setup (am_addr_t node_addr)
 {
-    comms_layer_t * radio = radio_init(RADIO_CHANNEL, 0x22, node_addr);
+    comms_layer_t * radio = radio_init(DEFAULT_RADIO_CHANNEL, 0x22, node_addr);
     if (NULL != radio)
     {
         debug1("radio rdy");
