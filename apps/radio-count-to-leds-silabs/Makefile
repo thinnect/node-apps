@@ -132,7 +132,8 @@ SOURCES += \
     $(SILABS_SDKDIR)/platform/emdrv/sleep/src/sleep.c \
     $(SILABS_SDKDIR)/platform/radio/rail_lib/hal/hal_common.c \
     $(NODE_PLATFORM_DIR)/silabs/radio_rtos.c \
-    $(NODE_PLATFORM_DIR)/common/radio_seqNum.c
+    $(NODE_PLATFORM_DIR)/common/radio_seqNum.c \
+    $(NODE_PLATFORM_DIR)/common/sys_panic.c \
 
 # logging
 #CFLAGS += -DLOGGER_TIMESTAMP

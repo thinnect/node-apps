@@ -14,7 +14,8 @@ with changes and improvements.
 
 # Platforms
 The application has been tested and should work with the following platforms:
- * Thinnect TestSystemBoard (tsb)
+ * Thinnect TestSystemBoard0 (tsb0)
+ * Thinnect TestSystemBoard2 (tsb2)
  * SiLabs BRD4001A + BRD4304A (brd4304a-mb)
 
 # Build

@@ -9,7 +9,7 @@
 [submodule "zoo/thinnect.node-platform"]
 	path = zoo/thinnect.node-platform
 	url = https://github.com/thinnect/node-platform.git
-	branch = lptsleep
+	branch = conditional_sleep_behaviour
 [submodule "zoo/thinnect.lll"]
 	path = zoo/thinnect.lll
 	url = https://github.com/thinnect/lll.git
