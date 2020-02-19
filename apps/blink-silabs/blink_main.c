@@ -11,16 +11,6 @@
 #include <string.h>
 #include <inttypes.h>
 
-#include "em_chip.h"
-#include "em_rmu.h"
-#include "em_emu.h"
-#include "em_cmu.h"
-#include "em_gpio.h"
-#include "em_msc.h"
-#include "em_i2c.h"
-#include "em_adc.h"
-#include "em_usart.h"
-
 #include "retargetserial.h"
 
 #include "cmsis_os2.h"
@@ -81,6 +71,8 @@ void app_loop ()
 
     debug1("t1 %p t2 %p t3 %p", led0_timer, led1_timer, led2_timer);
 
+    PLATFORM_LedsSet(0);
+
     osTimerStart(led0_timer, 1000);
     osTimerStart(led1_timer, 2000);
     osTimerStart(led2_timer, 4000);
@@ -91,6 +83,10 @@ void app_loop ()
         info1("leds %u", (unsigned int)PLATFORM_LedsGet());
         osMutexRelease(m_led_mutex);
         osDelay(1000);
+        if(PLATFORM_ButtonGet())
+        {
+            info1("BUTTON");
+        }
     }
 }
 
@@ -105,11 +101,9 @@ int main ()
 {
     PLATFORM_Init();
 
-    CMU_ClockEnable(cmuClock_GPIO, true);
-    CMU_ClockEnable(cmuClock_PRS, true);
-
     // LEDs
     PLATFORM_LedsInit();
+    PLATFORM_ButtonPinInit();
 
     // Configure debug output
     RETARGET_SerialInit();

@@ -12,16 +12,6 @@
 #include <string.h>
 #include <inttypes.h>
 
-#include "em_chip.h"
-#include "em_rmu.h"
-#include "em_emu.h"
-#include "em_cmu.h"
-#include "em_gpio.h"
-#include "em_msc.h"
-#include "em_i2c.h"
-#include "em_adc.h"
-#include "em_usart.h"
-
 #include "retargetserial.h"
 
 #include "cmsis_os2.h"
@@ -77,16 +67,34 @@ static void radio_send_done (comms_layer_t * comms, comms_msg_t * msg, comms_err
     osMutexRelease(m_mutex);
 }
 
+static void radio_start_done (comms_layer_t * comms, comms_status_t status, void * user)
+{
+    debug("started %d", status);
+}
+
 // Perform basic radio setup, register to receive RadioCountToLeds packets
 static comms_layer_t* radio_setup (am_addr_t node_addr)
 {
     static comms_receiver_t rcvr;
-    comms_layer_t * radio = radio_init(RADIO_CHANNEL, 0x22, node_addr);
-    if (NULL != radio)
+    comms_layer_t * radio = radio_init(DEFAULT_RADIO_CHANNEL, 0x22, node_addr);
+    if (NULL == radio)
     {
-        comms_register_recv(radio, &rcvr, receive_message, NULL, AMID_RADIO_COUNT_TO_LEDS);
-        debug1("radio rdy");
+        return NULL;
     }
+
+    if (COMMS_SUCCESS != comms_start(radio, radio_start_done, NULL))
+    {
+        return NULL;
+    }
+
+    // Wait for radio to start, could use osTreadFlagWait and set from callback
+    while(COMMS_STARTED != comms_status(radio))
+    {
+        osDelay(1);
+    }
+
+    comms_register_recv(radio, &rcvr, receive_message, NULL, AMID_RADIO_COUNT_TO_LEDS);
+    debug1("radio rdy");
     return radio;
 }
 
@@ -165,9 +173,6 @@ int logger_fwrite_boot (const char *ptr, int len)
 int main ()
 {
     PLATFORM_Init();
-
-    CMU_ClockEnable(cmuClock_GPIO, true);
-    CMU_ClockEnable(cmuClock_PRS, true);
 
     // LEDs
     PLATFORM_LedsInit();

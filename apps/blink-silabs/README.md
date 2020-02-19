@@ -16,7 +16,7 @@ https://github.com/tinyos/tinyos-main/tree/master/apps/Blink
 
 # Platforms
 The application has been tested and should work with the following platforms:
- * Thinnect TestSystemBoard (tsb)
+ * Thinnect TestSystemBoards (tsb0, tsb1, tsb2)
  * SiLabs Thunderboard Sense (thunderboard)
  * SiLabs Thunderboard Sense 2 (thunderboard2)
  * SiLabs BRD4001A + BRD4161A (brd4161a-mb)

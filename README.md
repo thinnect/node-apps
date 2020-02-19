@@ -17,12 +17,30 @@ demonstrates OS setup and using threads, mutexes and timers.
 
 See [Blink readme](apps/blink-silabs/README.md) for details.
 
+## DataFlash
+Dataflash is a test application that tries to wake a JEDEC SPI dataflash
+and read the ID.
+
+See [DataFlash readme](apps/dataflash-silabs/README.md) for details.
+
+## Hello
+Hello is a test application that prints HelloWorld!.
+It does not initalize an RTOS kernel.
+
+See [Hello readme](apps/hello-silabs/README.md) for details.
+
 ## RadioCountToLeds
 RadioCountToLeds is a simple application that broadcasts a counter value to the
 network and displays received counter values on LEDs. It demonstrates OS setup,
 using threads, mutexes, timers and the MistComm Radio API.
 
 See [RadioCountToLeds readme](apps/radio-count-to-leds-silabs/README.md) for details.
+
+## Tempsender
+TempSender is a simple radio broadcast demo application that sends a fake
+temperature reading in the Mist Resource data format.
+
+See [Tempsender readme](apps/tempsender-silabs/README.md) for details.
 
 # Platforms
 Currently the examples only cover some SiLabs Wireless Gecko based devices.

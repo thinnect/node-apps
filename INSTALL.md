@@ -49,14 +49,14 @@ Installing Simplicity Studio:
   (wait for update process to complete)
 - Click `Install by Device`
 - Choose the `SLWSTK6000B` Mighty Gecko Kit and click Next **twice**
-- Make sure at least `Flex SDK 2.5.5` is selected and click Next\
+- Make sure at least `Flex SDK 2.7.1.0` is selected and click Next\
   (It should be ok to use newer versions as well, though the SILABS_SDKDIR path may need adjustment)
 - Accept licenses, click Finish, wait for completion and exit
 - Add the path to commander to path - edit `~/.profile` and add:\
   `export PATH=$PATH:~/SimplicityStudio_v4/developer/adapter_packs/commander`
 
 Makefiles require that the SILABS_SDKDIR variable point to the
-SimplicityStudio_v4/developer/sdks/gecko_sdk_suite/v2.5 directory, so take
+SimplicityStudio_v4/developer/sdks/gecko_sdk_suite/v2.7 directory, so take
 note of where SimplicityStudio_v4 ended up, if you followed the steps above,
 then it should be stored at /home/user/SimplicityStudio_v4, which is the default
 for SILABS_SDKDIR in the Makefiles.
@@ -77,7 +77,7 @@ sudo apt install headeredit
 
 # OpenOCD (optional)
 
-Some boards require OpenOCD for flashing devices.
+Some boards(Thinnect tsb0 & tsb2) require OpenOCD for flashing.
 OpenOCD is not needed for any of the official SiLabs development kits.
 
 Currently the OpenOCD version distributed with Ubuntu is able to flash Series 1

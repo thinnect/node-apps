@@ -75,14 +75,31 @@ static void radio_send_done (comms_layer_t * comms, comms_msg_t * msg, comms_err
     PLATFORM_LedsSet(0);
 }
 
-// Perform basic radio setup
+static void radio_start_done (comms_layer_t * comms, comms_status_t status, void * user)
+{
+    debug("started %d", status);
+}
+
+// Perform basic radio setup, register to receive RadioCountToLeds packets
 static comms_layer_t* radio_setup (am_addr_t node_addr)
 {
-    comms_layer_t * radio = radio_init(RADIO_CHANNEL, 0x22, node_addr);
-    if (NULL != radio)
+    comms_layer_t * radio = radio_init(DEFAULT_RADIO_CHANNEL, 0x22, node_addr);
+    if (NULL == radio)
     {
-        debug1("radio rdy");
+        return NULL;
     }
+
+    if (COMMS_SUCCESS != comms_start(radio, radio_start_done, NULL))
+    {
+        return NULL;
+    }
+
+    // Wait for radio to start, could use osTreadFlagWait and set from callback
+    while(COMMS_STARTED != comms_status(radio))
+    {
+        osDelay(1);
+    }
+    debug1("radio rdy");
     return radio;
 }
 

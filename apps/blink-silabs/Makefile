@@ -13,17 +13,18 @@ VERSION_DEVEL           ?= "-dev"
 APP_START               = 0
 
 # Common build options - some of these should be moved to targets/boards
-CFLAGS                  += -Os -g -Wall -std=c99
-CFLAGS                  += -specs=nano.specs -specs=nosys.specs
+CFLAGS                  += -Wall -std=c99
 CFLAGS                  += -ffunction-sections -fdata-sections -ffreestanding -fsingle-precision-constant -Wstrict-aliasing=0
+CFLAGS                  += -DconfigUSE_TICKLESS_IDLE=0
 CFLAGS                  += -D__START=main -D__STARTUP_CLEAR_BSS
 CFLAGS                  += -DVTOR_START_LOCATION=$(APP_START)
 LDFLAGS                 += -nostartfiles -Wl,--gc-sections -Wl,--relax -Wl,-Map=$(@:.elf=.map),--cref -Wl,--wrap=atexit
-LDLIBS                  += -lgcc
-INCLUDES                += -Xassembler
+LDLIBS                  += -lgcc -lm
+INCLUDES                += -Xassembler -I$(BUILD_DIR) -I.
 
 # If set, disables asserts and debugging, enables optimization
 RELEASE_BUILD           ?= 0
+
 # Set the lll verbosity base level
 CFLAGS                  += -DBASE_LOG_LEVEL=0xFFFF
 
@@ -48,7 +49,7 @@ PROGRAM_DEST_ADDR       ?= $(APP_START)
 # distributed with this project and must be installed with Simplicity Studio.
 # The variable needs to point at the subdirectory with the version number, set
 # it in Makefile.private or through the environment.
-SILABS_SDKDIR           ?= $(HOME)/SimplicityStudio_v4/developer/sdks/gecko_sdk_suite/v2.5
+SILABS_SDKDIR           ?= $(HOME)/SimplicityStudio_v4/developer/sdks/gecko_sdk_suite/v2.7
 
 # Pull in the developer's private configuration overrides and settings
 -include Makefile.private
@@ -64,27 +65,43 @@ UUID_APPLICATION        := d709e1c5-496a-4d31-8957-f389d7fdbb71
 
 VERSION_BIN             := $(shell printf "%02X" $(VERSION_MAJOR))$(shell printf "%02X" $(VERSION_MINOR))$(shell printf "%02X" $(VERSION_PATCH))
 VERSION_STR             := "$(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)"$(VERSION_DEVEL)
+SW_MAJOR_VERSION        := $(VERSION_MAJOR)
+SW_MINOR_VERSION        := $(VERSION_MINOR)
+SW_PATCH_VERSION        := $(VERSION_PATCH)
 BUILD_TIMESTAMP         := $(shell date '+%s')
+IDENT_TIMESTAMP         := $(BUILD_TIMESTAMP)
 
+# NODE_PLATFORM_DIR is used by targets to add components to INCLUDES and SOURCES
+NODE_PLATFORM_DIR       := $(ZOO)/thinnect.node-platform
+
+# ______________ Build components - sources and includes _______________________
+
+SOURCES += blink_main.c
+
+# FreeRTOS
 FREERTOS_DIR ?= $(ZOO)/FreeRTOS-Kernel
 FREERTOS_INC = -I$(FREERTOS_DIR)/include \
-               -I$(FREERTOS_DIR)/portable/GCC/ARM_CM3 \
-               -I$(ZOO)/thinnect.cmsis-freertos/silabs
-FREERTOS_SRC = $(wildcard $(FREERTOS_DIR)/*.c) \
-               $(FREERTOS_DIR)/portable/GCC/ARM_CM3/port.c \
-               $(FREERTOS_DIR)/portable/MemMang/heap_5.c \
-               $(ZOO)/thinnect.cmsis-freertos/silabs/cmsis_os2.c \
-               $(ZOO)/thinnect.cmsis-freertos/silabs/freertos_evr.c \
-               $(ZOO)/thinnect.cmsis-freertos/silabs/FreeRTOS_Tick_Config.c
-CMSIS_CONFIG_DIR ?= $(ZOO)/thinnect.cmsis-freertos/silabs/config
+               -I$(ZOO)/thinnect.cmsis-freertos/CMSIS_5/CMSIS/RTOS2/Include \
+               -I$(ZOO)/thinnect.cmsis-freertos/CMSIS-FreeRTOS/CMSIS/RTOS2/FreeRTOS/Include \
+               -I$(ZOO)/thinnect.cmsis-freertos/$(MCU_ARCH)
 
-# List all source files in the project
-SOURCES = blink_main.c
+FREERTOS_SRC = $(wildcard $(FREERTOS_DIR)/*.c) \
+               $(ZOO)/thinnect.cmsis-freertos/CMSIS-FreeRTOS/CMSIS/RTOS2/FreeRTOS/Source/cmsis_os2.c
+
+INCLUDES += $(FREERTOS_PORT_INC) $(FREERTOS_INC)
+SOURCES += $(FREERTOS_PORT_SRC) $(FREERTOS_SRC)
+
+# CMSIS_CONFIG_DIR is used to add default CMSIS and FreeRTOS configs to INCLUDES
+CMSIS_CONFIG_DIR ?= $(ZOO)/thinnect.cmsis-freertos/$(MCU_ARCH)/config
+
+# Silabs EMLIB, RAIL, radio
+INCLUDES += \
+    -I$(SILABS_SDKDIR)/hardware/kit/common/drivers \
+    -I$(SILABS_SDKDIR)/platform/halconfig/inc/hal-config \
+    -I$(SILABS_SDKDIR)/platform/emlib/inc \
 
 # Sources for dependencies and Silabs libraries
 SOURCES += \
-    $(ZOO)/thinnect.device-signature/signature/DeviceSignature.c \
-    $(ZOO)/thinnect.device-signature/area/silabs/SignatureArea.c \
     $(SILABS_SDKDIR)/hardware/kit/common/drivers/retargetserial.c \
     $(SILABS_SDKDIR)/hardware/kit/common/drivers/retargetio.c \
     $(SILABS_SDKDIR)/platform/emlib/src/em_system.c \
@@ -94,30 +111,28 @@ SOURCES += \
     $(SILABS_SDKDIR)/platform/emlib/src/em_rmu.c \
     $(SILABS_SDKDIR)/platform/emlib/src/em_gpio.c \
     $(SILABS_SDKDIR)/platform/emlib/src/em_usart.c \
-    $(SILABS_SDKDIR)/platform/emlib/src/em_i2c.c \
-    $(SILABS_SDKDIR)/platform/emlib/src/em_ldma.c \
-    $(SILABS_SDKDIR)/platform/emlib/src/em_msc.c \
-    $(SILABS_SDKDIR)/platform/emlib/src/em_timer.c \
-    $(ZOO)/thinnect.node-platform/silabs/logger_fwrite.c \
-    $(ZOO)/thinnect.lll/logging/loggers_ext.c \
-    $(ZOO)/lammertb.libcrc/src/crcccitt.c \
-    $(FREERTOS_SRC)
+    $(SILABS_SDKDIR)/platform/emlib/src/em_msc.c
 
-# All include directories
-INCLUDES += \
-    -I$(BUILD_DIR) \
-    -I. \
-    -I$(ZOO)/graphitemaster.incbin \
-    -I$(ZOO)/jtbr.endianness \
-    -I$(ZOO)/thinnect.node-platform/include \
-    -I$(ZOO)/thinnect.device-signature/signature/ \
-    -I$(ZOO)/thinnect.device-signature/area/ \
-    -I$(SILABS_SDKDIR)/hardware/kit/common/drivers \
-    -I$(SILABS_SDKDIR)/platform/halconfig/inc/hal-config \
-    -I$(SILABS_SDKDIR)/platform/emlib/inc \
-    -I$(ZOO)/thinnect.lll/logging \
-    -I$(ZOO)/lammertb.libcrc/include \
-    $(FREERTOS_INC)
+# logging
+CFLAGS  += -DLOGGER_FWRITE
+SOURCES += $(NODE_PLATFORM_DIR)/silabs/logger_fwrite.c
+SOURCES += $(ZOO)/thinnect.lll/logging/loggers_ext.c
+INCLUDES += -I$(ZOO)/thinnect.lll/logging
+
+# device signature
+INCLUDES += -I$(ZOO)/thinnect.device-signature/signature \
+            -I$(ZOO)/thinnect.device-signature/area
+SOURCES  += $(ZOO)/thinnect.device-signature/signature/DeviceSignature.c \
+            $(ZOO)/thinnect.device-signature/area/silabs/SignatureArea.c
+
+# Generally useful external tools
+INCLUDES += -I$(ZOO)/lammertb.libcrc/include \
+            -I$(ZOO)/jtbr.endianness \
+            -I$(ZOO)/graphitemaster.incbin
+SOURCES += $(ZOO)/lammertb.libcrc/src/crcccitt.c
+
+# platform stuff - watchdog, io etc...
+INCLUDES += -I$(NODE_PLATFORM_DIR)/include
 
 # ------------------------------------------------------------------------------
 
@@ -128,6 +143,15 @@ $(call passVarToCpp,CFLAGS,VERSION_MAJOR)
 $(call passVarToCpp,CFLAGS,VERSION_MINOR)
 $(call passVarToCpp,CFLAGS,VERSION_PATCH)
 $(call passVarToCpp,CFLAGS,VERSION_STR)
+$(call passVarToCpp,CFLAGS,SW_MAJOR_VERSION)
+$(call passVarToCpp,CFLAGS,SW_MINOR_VERSION)
+$(call passVarToCpp,CFLAGS,SW_PATCH_VERSION)
+$(call passVarToCpp,CFLAGS,IDENT_TIMESTAMP)
+
+UUID_APPLICATION_BYTES = $(call uuidToCstr,$(UUID_APPLICATION))
+$(call passVarToCpp,CFLAGS,UUID_APPLICATION_BYTES)
+
+$(call passVarToCpp,CFLAGS,BASE_LOG_LEVEL)
 
 # _______________________________ Project rules _______________________________
 
