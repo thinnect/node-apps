@@ -70,7 +70,7 @@ the HEADEREDIT variable can be used to point to a custom location.
 A debian package is also available from the Thinnect APT repository.
 ```
 curl https://artifacts.thinnect.net/repository/certificates/pgp/APTPackager.pub.asc | sudo apt-key add --
-echo "deb [arch=amd64] https://artifacts.thinnect.net/repository/public/ stretch main" >> /etc/apt/sources.list.d/thinnect.public.list
+echo "deb [arch=amd64,all] https://artifacts.thinnect.net/repository/apt-public/ stretch main" | sudo tee /etc/apt/sources.list.d/thinnect.public.list
 sudo apt update
 sudo apt install headeredit
 ```
@@ -88,7 +88,7 @@ flashing the User Signature page and Series 2 chips can be obtained from
 A debian package is also available from the Thinnect APT repository.
 ```
 curl https://artifacts.thinnect.net/repository/certificates/pgp/APTPackager.pub.asc | sudo apt-key add --
-echo "deb [arch=amd64] https://artifacts.thinnect.net/repository/public/ stretch main" >> /etc/apt/sources.list.d/thinnect.public.list
+echo "deb [arch=amd64,all] https://artifacts.thinnect.net/repository/apt-public/ stretch main" | sudo tee /etc/apt/sources.list.d/thinnect.public.list
 sudo apt update
 sudo apt install openocd
 ```
