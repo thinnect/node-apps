@@ -20,8 +20,7 @@
 #include "SignatureArea.h"
 #include "DeviceSignature.h"
 
-#include "loggers_ext.h"
-#include "logger_fwrite.h"
+#include "basic_rtos_logger_setup.h"
 
 #include "loglevels.h"
 #define __MODUUL__ "main"
@@ -62,8 +61,7 @@ static void led2_timer_cb(void* argument)
 void app_loop ()
 {
     // Switch to a thread-safe logger
-    logger_fwrite_init();
-    log_init(BASE_LOG_LEVEL, &logger_fwrite, NULL, NULL);
+    basic_rtos_logger_setup();
 
     m_led_mutex = osMutexNew(NULL);
 
@@ -94,13 +92,6 @@ void app_loop ()
     }
 }
 
-int logger_fwrite_boot (const char *ptr, int len)
-{
-    fwrite(ptr, len, 1, stdout);
-    fflush(stdout);
-    return len;
-}
-
 int main ()
 {
     PLATFORM_Init();
@@ -110,8 +101,7 @@ int main ()
     PLATFORM_ButtonPinInit();
 
     // Configure debug output
-    RETARGET_SerialInit();
-    log_init(BASE_LOG_LEVEL, &logger_fwrite_boot, NULL, NULL);
+    basic_noos_logger_setup();
 
     info1("Blink "VERSION_STR" (%d.%d.%d)", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
 

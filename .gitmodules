@@ -31,6 +31,10 @@
 	path = zoo/thinnect.cmsis-freertos
 	url = https://github.com/thinnect/cmsis-freertos
 	branch = master
+[submodule "zoo/thinnect.cmsis-ext"]
+	path = zoo/thinnect.cmsis-ext
+	url = https://github.com/thinnect/cmsis-ext.git
+	branch = dev
 
 [submodule "zoo/jtbr.endianness"]
 	path = zoo/jtbr.endianness
