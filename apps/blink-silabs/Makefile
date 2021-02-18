@@ -133,6 +133,8 @@ SOURCES += $(ZOO)/lammertb.libcrc/src/crcccitt.c
 
 # platform stuff - watchdog, io etc...
 INCLUDES += -I$(NODE_PLATFORM_DIR)/include
+INCLUDES += -I$(NODE_PLATFORM_DIR)/include/silabs
+SOURCES += $(NODE_PLATFORM_DIR)/common/platform_mutex.c
 
 # ------------------------------------------------------------------------------
 

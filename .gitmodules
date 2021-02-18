@@ -26,7 +26,7 @@
 [submodule "zoo/FreeRTOS-Kernel"]
 	path = zoo/FreeRTOS-Kernel
 	url = https://github.com/FreeRTOS/FreeRTOS-Kernel
-	branch = master
+	branch = main
 [submodule "zoo/thinnect.cmsis-freertos"]
 	path = zoo/thinnect.cmsis-freertos
 	url = https://github.com/thinnect/cmsis-freertos
@@ -43,7 +43,7 @@
 [submodule "zoo/graphitemaster.incbin"]
 	path = zoo/graphitemaster.incbin
 	url = https://github.com/graphitemaster/incbin.git
-	branch = master
+	branch = main
 
 [submodule "zoo/prolab.motexml"]
 	path = zoo/prolab.motexml

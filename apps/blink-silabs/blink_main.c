@@ -61,6 +61,10 @@ static void led2_timer_cb(void* argument)
 // App loop - do setup and periodically print status
 void app_loop ()
 {
+    // Switch to a thread-safe logger
+    logger_fwrite_init();
+    log_init(BASE_LOG_LEVEL, &logger_fwrite, NULL, NULL);
+
     m_led_mutex = osMutexNew(NULL);
 
     osDelay(1000);
@@ -107,7 +111,7 @@ int main ()
 
     // Configure debug output
     RETARGET_SerialInit();
-    log_init(BASE_LOG_LEVEL, &logger_fwrite_boot, NULL);
+    log_init(BASE_LOG_LEVEL, &logger_fwrite_boot, NULL, NULL);
 
     info1("Blink "VERSION_STR" (%d.%d.%d)", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
 
@@ -120,11 +124,6 @@ int main ()
 
     if (osKernelReady == osKernelGetState())
     {
-        // Switch to a thread-safe logger
-        logger_fwrite_init();
-        log_init(BASE_LOG_LEVEL, &logger_fwrite, NULL);
-
-        // Start the kernel
         osKernelStart();
     }
     else
