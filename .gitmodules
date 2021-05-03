@@ -53,3 +53,7 @@
 	path = zoo/prolab.dt-types
 	url = https://github.com/proactivity-lab/dt-types.git
 	branch = master
+[submodule "apps/blink-pwm-silabs"]
+	path = apps/blink-pwm-silabs
+	url = https://github.com/proactivity-lab-study/blink-PWM-silabs.git
+	branch = master
