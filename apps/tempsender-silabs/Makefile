@@ -25,7 +25,7 @@ CFLAGS                  += -ffunction-sections -fdata-sections -ffreestanding -f
 CFLAGS                  += -DconfigUSE_TICKLESS_IDLE=0
 CFLAGS                  += -D__START=main -D__STARTUP_CLEAR_BSS
 CFLAGS                  += -DVTOR_START_LOCATION=$(APP_START)
-LDFLAGS                 += -nostartfiles -Wl,--gc-sections -Wl,--relax -Wl,-Map=$(@:.elf=.map),--cref -Wl,--wrap=atexit
+LDFLAGS                 += -nostartfiles -Wl,--gc-sections -Wl,--relax -Wl,-Map=$(@:.elf=.map),--cref -Wl,--wrap=atexit -specs=nosys.specs
 LDLIBS                  += -lgcc -lm
 INCLUDES                += -Xassembler -I$(BUILD_DIR) -I.
 
@@ -56,7 +56,7 @@ PROGRAM_DEST_ADDR       ?= $(APP_START)
 # distributed with this project and must be installed with Simplicity Studio.
 # The variable needs to point at the subdirectory with the version number, set
 # it in Makefile.private or through the environment.
-SILABS_SDKDIR           ?= $(HOME)/SimplicityStudio_v4/developer/sdks/gecko_sdk_suite/v2.7
+SILABS_SDKDIR           ?= $(HOME)/SimplicityStudio_v5/developer/sdks/gecko_sdk_suite/v3.2
 
 # Pull in the developer's private configuration overrides and settings
 -include Makefile.private
@@ -139,7 +139,6 @@ SOURCES += \
     $(SILABS_SDKDIR)/platform/emlib/src/em_timer.c \
     $(SILABS_SDKDIR)/platform/emlib/src/em_wdog.c \
     $(SILABS_SDKDIR)/platform/emdrv/sleep/src/sleep.c \
-    $(SILABS_SDKDIR)/platform/radio/rail_lib/hal/hal_common.c \
     $(NODE_PLATFORM_DIR)/silabs/radio_rtos.c \
     $(NODE_PLATFORM_DIR)/common/radio_seqNum.c \
     $(NODE_PLATFORM_DIR)/common/sys_panic.c
