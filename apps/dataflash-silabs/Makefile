@@ -22,6 +22,9 @@ LDFLAGS                 += -nostartfiles -Wl,--gc-sections -Wl,--relax -Wl,-Map=
 LDLIBS                  += -lgcc -lm
 INCLUDES                += -Xassembler -I$(BUILD_DIR) -I.
 
+# The CMSIS RTOS2 wrapper for FreeRTOS now requires this flag to actually import the components 
+CFLAGS                  += -D_RTE_=1
+
 # If set, disables asserts and debugging, enables optimization
 RELEASE_BUILD           ?= 0
 
