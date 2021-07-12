@@ -104,7 +104,7 @@ A good tool for receiving the output from a serial port is
 [serial-logger](https://github.com/thinnect/serial-logger).
 
 # Embbedded operating system
-The node platform is built around the ARM CMSIS RTOS abstaction layer and
+The node platform is built around the ARM CMSIS RTOS abstraction layer and
 therefore it would not be too complex to support different operating systems,
 however currently only [FreeRTOS](https://github.com/FreeRTOS) is used in
 practice and there may be some direct hooks into the FreeRTOS kernel in the code.
